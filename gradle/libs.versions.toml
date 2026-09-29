@@ -22,6 +22,7 @@ androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", ve
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 google-adk-core = { group = "com.google.adk", name = "google-adk-kotlin-core-android", version.ref = "adk" }
 google-adk-processor = { group = "com.google.adk", name = "google-adk-kotlin-processor", version.ref = "adk" }
+mlkit-genai-prompt = { group = "com.google.mlkit", name = "genai-prompt", version = "1.0.0-beta2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

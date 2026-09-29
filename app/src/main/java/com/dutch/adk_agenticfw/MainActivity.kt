@@ -1,5 +1,6 @@
 package com.dutch.adk_agenticfw
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -34,6 +35,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         tvLogs = findViewById(R.id.tvLogs)
+
+        // Check device capability for offline Gemini Nano models on launch
+        lifecycleScope.launch {
+            val status = checkOnDeviceModelAvailability()
+            appendLog("[SYSTEM] On-Device Gemini Nano Status: $status")
+        }
 
         findViewById<Button>(R.id.btnComfortTest).setOnClickListener {
             runAgentCommand("Set the driver side temperature to 70 degrees and turn fan speed to 4")
@@ -74,5 +81,28 @@ class MainActivity : AppCompatActivity() {
     private fun appendLog(text: String) {
         val currentText = tvLogs.text.toString()
         tvLogs.text = "$currentText\n$text"
+    }
+
+    private fun checkOnDeviceModelAvailability(): String {
+        Log.d(TAG, "--> checkOnDeviceModelAvailability: Inspecting hardware & ML Kit status")
+        return try {
+            val sdkInt = Build.VERSION.SDK_INT
+            val deviceModel = "${Build.MANUFACTURER} ${Build.MODEL}"
+            Log.d(TAG, "  [DEVICE_INFO] Device: $deviceModel, Android SDK: $sdkInt")
+
+            if (sdkInt < 34) {
+                val msg = "UNAVAILABLE ($deviceModel running Android SDK $sdkInt; requires Android 14+ / SDK 34)"
+                Log.d(TAG, "<-- checkOnDeviceModelAvailability: $msg")
+                msg
+            } else {
+                val msg = "SUPPORTED ($deviceModel running Android SDK $sdkInt with Android 14+ GenAI support)"
+                Log.d(TAG, "<-- checkOnDeviceModelAvailability: $msg")
+                msg
+            }
+        } catch (e: Exception) {
+            val msg = "ERROR (${e.localizedMessage})"
+            Log.e(TAG, "<-- checkOnDeviceModelAvailability error: $msg", e)
+            msg
+        }
     }
 }

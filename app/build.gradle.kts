@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.material)
 
     implementation(libs.google.adk.core)
+    implementation(libs.mlkit.genai.prompt)
     ksp(libs.google.adk.processor)
 
     testImplementation(libs.junit)
